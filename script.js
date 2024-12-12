@@ -20,9 +20,11 @@ let pTest = false;
 let projWidth, projHeight, projHyp, projExist
 let projDelay = 0
 let enemy2Hyp = 0
+let mX, mY, grappleDist
 
 function preload() {
     bgImg = loadImage('assets/bg.png')
+    bgDead = loadImage('assets/bgDead.png')
 
     sheet = loadImage('assets/playerSheet.png')
     heartsSheet = loadImage('assets/heartsSheet.png')
@@ -675,7 +677,6 @@ function setupMenu() {
     LoadButton = createButton('Load Game');
     LoadButton.class("button");
     LoadButton.position(width * 2.15, height * 1.5);
-    //LoadButton.mousePressed(loadGame);
 
     NewButton = createButton('New Game');
     NewButton.class("button");
@@ -685,12 +686,10 @@ function setupMenu() {
     HighscoreButton = createButton('Highscores');
     HighscoreButton.class("button");
     HighscoreButton.position(width * 2.13, height * 2.5);
-    //HighscoreButton.mousePressed(highscore);
     
     SettingsButton = createButton('Settings');
     SettingsButton.class("button");
     SettingsButton.position(width * 2.21, height * 3);
-    //SettingsButton.mousePressed(settings);
 }
 
 function setupGame() {
@@ -758,6 +757,26 @@ function setupPause() {
     BackButton.mousePressed(mainMenu);
 }
 
+function setupRetry() {
+    levelTiles.removeAll()
+    player.player.remove()
+    enemies1.enemy1.removeAll()
+    hearts.hearts.remove()
+    shield.shield.remove()
+    background(bgDead);
+    textSize(32);
+
+    RetryButton = createButton('Retry');
+    RetryButton.class("button");
+    RetryButton.position(width * 2.22, height * 2);
+    RetryButton.mousePressed(retryGame);
+
+    MenuButton = createButton('Menu');
+    MenuButton.class("button");
+    MenuButton.position(width * 2.22, height * 2.5);
+    MenuButton.mousePressed(mainMenu);
+}
+
 function levelSetup() {
     //This sets up the tilemap using the tiles created above
     tilemaps =[[
@@ -768,29 +787,29 @@ function levelSetup() {
         "L-+!!...uUo..............................fllo...................",
         ".!!....ulllUo............................qllF...................",
         "......ullllDa.............................qia...................",
-        "......qDllF...........................H....t....................",
-        "........qia.........................uohE*..t...........*........",
-        "R..*.....t........................IulGggR..t....................",
-        "XggRI....t........................GggZbbXR.P....................",
+        "......qDllF............................H...t....................",
+        "........qia.........................uoEh...t....................",
+        "R..*.....t........................IulGggRI.t....................",
+        "XggRI....t........................GggZbbXRIP....................",
         "bbbXR.d..t.......................eZbbbGRbXggRI..................",
         "bbbbSUlo.t...................kV...NbbeZXgRbbXgR...kCV...........",
-        "bbbbXgRFIP........*.....*..........NbbApbprbbbXR................",
+        "bbbbXgRFIPI.......*.....*..........NbbApbprbbbXR................",
         "gRbbbbXggggR...kV...................AbBbBbpbbbbL........kCV.....",
-        "bXggggRbbbbbR..........OMMYMMK......NbpbbL.AbbL................I",
+        "bXggggRbbbbbR..........OMMYMMK......NbpbbL.AbbL...............II",
         "bbbbbbXrbbbbS....OMYMK....m..........Q.NS..NbS...............egg",
         "bbbbbpLbbbbbL......m......m..........B..B...AL................Ab",
-        "bbbbSbbbbbbL.......m......m.................B............*....Nb",
+        "bbbbSbbbbbbL.......m......m.................B............*I...Nb",
         "bbbbLbbbbbS........m...*..m.............................GgR....A",
         "bbbLbbbpppL........m...uo.m............................eZbS....N",
         "ppLbbbL......uo....m..ulF.m...............H.............NpL.....",
-        "bbbbbS......ullo...yIGggRIy..........uo.IEh.*...................",
+        "bbbbbS......ullo...yIGggRIy..........uo..Eh.....................",
         "ppbbbL.....ulllF..IGgZbbGggR........ullUGgggRI......GR..........",
         "..NpL......qllla.GggRbbbAbbL........flGgZbbbXgR....eZXr.........",
         ".......*....qia..NppLbbbNpL........IGgZbbbbbGgggR...NL....IT....",
-        ".............t....NpppbbL.........IGZbbbGggggRbbS........esL....",
-        "!.....uo.....P........NL.......*.GggRbbbAbbbbSppL..T............",
+        ".............t....NpppbbL..........GZbbbGggggRbbS........esL....",
+        "!.....uo.....P........NL.......*.GggRbbbAbbbbSppL..TI...........",
         "gggREulF.....GR...............uo.NbbSbbbAbbbbSbS..GZgR..........",
-        "bbbGggggR...GggRo...........Iullo.NbSbbbAbbbbSbS..NppL.T..T.....",
+        "bbbGggggR...GggRo..........I.ullo.NbSbbbAbbbbSbS..NppL.T..T.....",
         "bbbAbbbbS...AbbSlUo.......IGgggRF..AGRbbAbbbbSbS.......B..Nr....",
         "bGgRbbbbL...AbbGgggR.....GgRbbbXR..AASbbAbbbbSbS....*...........",
         "bAbSbbbS....AbbAbbbS.....NbGgRbbL..AASbbAbbbbSbbR..GgR..........",
@@ -854,6 +873,7 @@ function draw() {
         }
         tempStateG = 0
         tempStateP = 0
+        tempStateR = 0
         drawMenu()
     }
     else if(state == 1) {
@@ -864,6 +884,7 @@ function draw() {
         drawGame()
         tempStateP = 0
         tempStateM = 0
+        tempStateR = 0
     }
     else if(state == 2) {
         if(tempStateP == 0) {
@@ -872,13 +893,31 @@ function draw() {
         }
         tempStateG = 0
         tempStateM = 0
+        tempStateR = 0
         drawPause()
+    }
+    else if(state == 3) {
+        if(tempStateR == 0) {
+            setupRetry()
+            tempStateR = 1
+        }
+        tempStateG = 0
+        tempStateM = 0
+        tempStateP = 0
+        drawRetry()
     }
     //console.log(state + " " + tempStateG)
 }
 
 function drawMenu() {
     text("CLIFFHANGER", width*0.25, height*0.15)
+}
+
+function drawRetry() {
+    text("YOU HAVE DIED", width*0.2, height*0.15)
+    scoreButton = createButton("Score: " + (player.score * (tilemapCount + 1)).toString());
+    scoreButton.class("button");
+    scoreButton.position(width * 2.15, height * 1.1);
 }
 
 function drawGame() {
@@ -894,7 +933,10 @@ function drawGame() {
     text(player.score, width*0.93, height*0.1)
     //background(255)
 
-    player.die();
+    if(player.lives == 0) {
+        state = 3
+    }
+
     player.show();
     player.move();
     player.useDash();
@@ -917,6 +959,7 @@ function drawGame() {
     overlapCheckpoint();
     collectPumpkin();
     collectCoin();
+    //useHook();
 
     touchWater();
     touchSpikes();
@@ -943,12 +986,16 @@ function drawGame() {
         }
             
     }
+    if(player.player.lives == 0){
+        tilemapCount = 0
+    }
 
     //console.log(player.player.y)
 }
 
 function drawPause() {
     text("PAUSED", width*0.37, height*0.15)
+    
 }
 
 // Function to change the images of all the tiles to
@@ -1300,6 +1347,13 @@ function newGame() {
     state = 1
 }
 
+function retryGame() {
+    RetryButton.remove()
+    MenuButton.remove()
+    scoreButton.remove()
+    state = 1
+}
+
 function mainMenu() {
     window.open("index.html", "_self")
 }
@@ -1309,3 +1363,18 @@ function continueGame() {
     ContinueButton.remove()
     BackButton.remove()
 }
+
+function useHook() {
+    if(mouse.presses()) {
+        dest = new Sprite(mouseX, mouseY, 10, 10)
+        console.log(dest.x + " " + dest.y + " " + player.player.x + " " + player.player.y)
+
+        grappleDist = calcDist(player.player.x, mX, player.player.y, mY)
+        if(grappleDist < 20) {
+
+        }
+        console.log(grappleDist)
+    }
+}
+
+//

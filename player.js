@@ -123,12 +123,6 @@ class Player {
             this.lives -= 1
         }
     }
-
-    useShield() {
-    }
-
-    useHook() {
-    }
     
     die() {
         if(this.lives == 0){
