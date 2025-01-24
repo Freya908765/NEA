@@ -21,6 +21,7 @@ let projWidth, projHeight, projHyp, projExist
 let projDelay = 0
 let enemy2Hyp = 0
 let mX, mY, grappleDist
+let slowFall = true
 
 function preload() {
     bgImg = loadImage('assets/bg.png')
@@ -1024,6 +1025,7 @@ function drawGame() {
     overlapCheckpoint();
     collectPumpkin();
     collectCoin();
+    useSlowFall();
     //useHook();
 
     touchWater();
@@ -1207,7 +1209,7 @@ function doubleJump() {
     // Checks if the player is in the air, and performs another jump if they have only jumped once
     if((!bottomSensor.colliding(walkable) || !bottomSensor.colliding(corner)) && player.doubleJump) {
         if(kb.presses(' ')) {
-            player.player.vel.y -= 5
+            player.player.vel.y -= 8
             player.doubleJump = false;
         }
     }
@@ -1215,7 +1217,7 @@ function doubleJump() {
     else if(bottomSensor.colliding(walkable) || bottomSensor.colliding(corner)) {
         player.doubleJump = true
         if(kb.presses(' ')) {
-            player.player.vel.y -= 5
+            player.player.vel.y -= 8
         }
     // Ensures that the player gains speed as they fall
     else if(!(bottomSensor.colliding(walkable) || bottomSensor.colliding(corner))){
@@ -1467,7 +1469,7 @@ function continueGame() {
     BackButton.remove()
 }
 
-function useHook() {
+//function useHook() {
     if(mouse.presses()) {
         dest = new Sprite(mouseX, mouseY, 10, 10)
         console.log(dest.x + " " + dest.y + " " + player.player.x + " " + player.player.y)
@@ -1478,4 +1480,22 @@ function useHook() {
         }
         console.log(grappleDist)
     }
+
+function useSlowFall() {
+    if((!bottomSensor.colliding(walkable) || !bottomSensor.colliding(corner))) {
+        if(slowFall) {
+            console.log("primed")
+            if(kb.pressing('r')) {
+                world.gravity.y = 5;
+                console.log("active")
+            }
+            else{
+                world.gravity.y = 10;
+            }
+        }
+    }
+    else {
+        slowFall = true
+    }
+    console.log("function called")
 }

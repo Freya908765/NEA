@@ -5,7 +5,6 @@ class Player {
         this.score = 0;
         this.checkpoint = 0;
         this.dash = true;
-        this.slowFall = false;
         this.invincibleDash = false;
         this.doubleJump = true;
         this.xPos = xPos;
@@ -100,7 +99,6 @@ class Player {
             }     
         }
         this.timer -= 1
-        console.log(this.inv + " " + this.timer)
         if(this.timer == 20) {
             this.inv = false
         }
