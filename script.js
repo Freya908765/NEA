@@ -7,8 +7,8 @@ let burrowed;
 let burrowTime = 180
 let checkx = 0;
 let checky = 0;
-let startPositions = [[50, 450],[570, 580]]
-let bgColours = [[174, 227, 237], [249, 226, 188]]
+let startPositions = [[50, 450],[570, 580], [90, 420]]
+let bgColours = [[174, 227, 237], [249, 226, 188], [186, 216, 216]]
 let levelTimer = 5
 let coinDelay = 60
 let state = 0
@@ -129,6 +129,35 @@ function preload() {
     hayImg = loadImage('assets2/hay.png')
     hayLImg = loadImage('assets2/hayL.png')
     hayRImg = loadImage('assets2/hayR.png')
+
+    grass3Img = loadImage('assets3/grassM.png');
+    grassL3Img = loadImage('assets3/grassEL.png');
+    grassR3Img = loadImage('assets3/grassER.png');
+
+    water3Img = loadImage('assets3/waterW.png')
+    water3PImg = loadImage('assets3/waterP.png')
+    water3Wmg = loadImage('assets3/water.png')
+
+    suppImg = loadImage('assets3/supp.png')
+    suppTImg = loadImage('assets3/suppT.png')
+
+    beamImg = loadImage('assets3/beamM.png')
+    beamELImg = loadImage('assets3/beamEL.png')
+    beamERImg = loadImage('assets3/beamER.png')
+
+    pipeAImg = loadImage('assets3/pipeA.png')
+    pipeBLImg = loadImage('assets3/pipeBL.png')
+    pipeBRImg = loadImage('assets3/pipeBR.png')
+    pipeEImg = loadImage('assets3/pipeE.png')
+    pipeSImg = loadImage('assets3/pipeS.png')
+
+    barrelImg = loadImage('assets3/barrel.png')
+    anchLImg = loadImage('assets3/anchL.png')
+    anchRImg = loadImage('assets3/anchR.png')
+
+    chainImg = loadImage('assets3/chain.png')
+    chainTImg = loadImage('assets3/chainT.png')
+    hookImg = loadImage('assets3/hook.png')
 }
 
 function tileSetup() {
@@ -819,7 +848,7 @@ function levelSetup() {
 
         [
         "................................................................",
-        "................................................................",
+        ".!..............................................................",
         "ggR.............................................................",
         "bbXr....kV......................................................",
         "bbL...........kV.............................................jGg",
@@ -853,8 +882,44 @@ function levelSetup() {
         "bAAXgRbbSS..t...32......&.........jAbbbbbXgggggggggggZbbbbbggbbb",
         "bAAbbSbbSXR.P....P..GggggggR......GZbGgggggggggRbbbbbbbbbbbbbbbb",
         "bAAbbSbbGgggggggggggZbbGgRbXgR...GZbGbbbbbbbbbbXgggggRbbbbbbbbbb",
-        "bAAbbSbbAbbbGggggggggRbAbSbbbSkCVAbbAbbbbGggggggRbbbbSbbbbbbbbbb",
-    ]
+        "bAAbbSbbAbbbGggggggggRbAbSbbbSkCVAbbAbbbbGggggggRbbbbSbbbbbbbbbb",],
+        
+        [
+        "bbbbbbbbbbbbS......NbbbbbbbbbbbbbbbbbbbbbbbS......Abbbbbbbbbbbbb",
+        "bbbbbbbbbbbbL.......AbbbbbbbbbbbbbbbbbbbbbbbR....Gbbbbbbbbbbbbbb",
+        "bbbbbbbbbppL........NbbbbbbbbbbbbbbbbbppbbbbbK...BqNbbbbbbbbbbbb",
+        "bbbbbpppL.q..........NbbbbbbbbbbbbbppLq.NpbbL4....c.qNpbbbbbbbbb",
+        "bpppL..q..a..........qNpbbbbbbbbbpL...a...NL......c.c..Npbbbbbbb",
+        "L......a.Ha..........a..NpbbbpppLq....a...q......OMMMK...Abbbbbb",
+        ".......a.ha..........a..q.NbL..q.a....a...a.......q.......Nbbbbb",
+        "......OMMMMK.........a..a..Q...a.a...OMMMMMK......a........Nbbbb",
+        "..........q..........a..a..B...a.a......q.........a.........Abbb",
+        "..........a..........a..a......a.a......a.........a.........Abbb",
+        "..OMK.....a..........a..a.....OMMMK.....a.........a.........Nbbb",
+        "...t......a.........OMMMMK..............a.........a..........Nbb",
+        "...t......a.............................a.........a...........Nb",
+        "...t......a.............................a.........a............A",
+        ".i.t......a.............................a.........a............N",
+        "OMMMMK....a.............................a.........a.............",
+        ".t........c.............................a.........a.............",
+        ".t..................&............H......a.........c.............",
+        ".t...............OMMMMMK.......i.h......c.......................",
+        ".t..................t.......OMMMMMK......................ullo...",
+        ".t..................t..........t.........................U..Uull",
+        ".t..................t..........t.........................U..UU£.",
+        ".t..................t..........t........................Gggggggg",
+        "ggR.................t..........t........................Abbbbbbb",
+        "bbS.................t..........t.......................OAbbbbbbb",
+        "bbS£..............E.t........H.t.......................3AbbGggRb",
+        "GggggR..........GggggggR.....h.t.....................ullAbbAbbSb",
+        "bbbbbS..........AbbbbbbS...GggggR....................U..AbbAbbSb",
+        "bbbbGggR.......uAbbbbbbS£uoAbbbbS...................GgggbbbAbbSb",
+        "bbbbAbbS.......UAbbbbGggggggRbbbS...................AbbbbbbAbbSb",
+        "bbbbAbbS...GgR.UAbbbbAbbbbbbSbbbS...................AbbbbbbAbbSb",
+        "bbbbAbbS...AbS.dAbbbbAbbbbbbSbbbSlo...............££AbbbbbbAbbSb",
+        "GgRbAbbSwwwAbSw#AbbbbAbbbbbbSbbbS.d......E.......GgggRbbbbbAbbSb",
+        "bbSbAbbSWWWAbSWWAbbbbAbbbbGgggRbSw#wwwwGgggR.....AbbbSbbbGgggRSb",
+        "bbSbAbbSWWWAbSWWAbbbbAbbbbAbbbSbSWWWWWWAbbbSwwwwwAbbbSbbbAbbbSSb",]
     ]
 
     levelTiles = new Tiles (tilemaps[tilemapCount],
@@ -930,7 +995,7 @@ function drawGame() {
     //background(249, 226, 188);
     background(bgColours[tilemapCount][0], bgColours[tilemapCount][1], bgColours[tilemapCount][2])
     textSize(16)
-    text(player.score, width*0.93, height*0.1)
+    //text(player.score, width*0.93, height*0.1)
     //background(255)
 
     if(player.lives == 0) {
@@ -977,13 +1042,21 @@ function drawGame() {
             player.player.y = startPositions[tilemapCount][1]
             for(e of enemies1.enemy1) {
                 e.remove()
+
+            }
+            for(d of enemies2.enemy2) {
+                d.remove()
+                projectile.remove()
+                
             }
             levelTiles.remove()
             player.resetSpawn(startPositions[tilemapCount][0], startPositions[tilemapCount][1])
             changeTiles()
             levelSetup()
             resetSensors()
+            levelTimer = 5
         }
+        
             
     }
     if(player.player.lives == 0){
@@ -1023,6 +1096,36 @@ function changeTiles() {
         trunk.image = trunk2Img
         trunkB.image = trunkB2Img
         leafTrunk.image = trunkT2Img
+    }
+    if(tilemapCount == 2) {
+        grassS.image = grass3Img
+        grassL.image = grassL3Img
+        grassR.image = grassR3Img
+
+        water.image = water3Img
+        waterT.image = water3Wmg
+        waterFB.image = water3PImg
+
+        trunk.img = suppImg
+        leafTrunk.img = suppTImg
+
+        mushroom.img = beamImg
+        mushroomEL.img = beamELImg
+        mushroomER.img = beamERImg
+
+        leaf.img = pipeAImg
+        leafT.img = pipeSImg
+        leafLC.img = pipeBLImg
+        leafRC.img = pipeBRImg
+        leafM.img = pipeEImg
+
+        hay.img = barrelImg
+        branchL.img = anchLImg
+        branchR.img = anchRImg
+
+        leafBLC.img = chainTImg
+        leafBRC.img = chainImg
+        cloud.img = hookImg
     }
 }
 
@@ -1376,5 +1479,3 @@ function useHook() {
         console.log(grappleDist)
     }
 }
-
-//

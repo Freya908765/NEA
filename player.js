@@ -11,6 +11,8 @@ class Player {
         this.xPos = xPos;
         this.yPos = yPos;
         this.xDir = 1;
+        this.timer = 20
+        this.inv = false
 
         this.player = new Sprite(xPos, yPos, 20, 24)
         this.player.rotationLock = true;
@@ -67,10 +69,17 @@ class Player {
         }
     }
 
-
-
+    //Function to allow the player to dash
     useDash() {
+        //Check if dash has already been used and if playeer pressing shift
         if(this.dash && kb.presses('shift')) {
+            //Statement to give player invincibility for 20 frames
+            if(this.timer <= 0) {
+                this.inv = true
+                this.timer = 40
+                console.log("INV " + this.timer)
+            }
+            //Statement to move the player and prevent double dashing
             if(kb.pressing(' ') && !(kb.pressing('a') || kb.pressing('d'))) {
                 this.player.vel.y = -14
                 this.dash = false;
@@ -88,13 +97,18 @@ class Player {
             else if((kb.pressing('a') || kb.pressing('d')) && !kb.pressing(' ')){
                 this.player.vel.x = 7 * this.xDir;
                 this.dash = false;
-            }
+            }     
+        }
+        this.timer -= 1
+        console.log(this.inv + " " + this.timer)
+        if(this.timer == 20) {
+            this.inv = false
         }
     }
 
     // Hit for if damage is affected by shield
     hit(shield, checkX, checkY) {
-        if(!shield){
+        if(!shield && !this.inv){
             this.die();
             if(this.checkpoint == 0) {
                 this.player.x = this.xPos;
