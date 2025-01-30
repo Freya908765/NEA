@@ -22,6 +22,7 @@ let projDelay = 0
 let enemy2Hyp = 0
 let mX, mY, grappleDist
 let slowFall = true
+let fallTimer = 120
 
 function preload() {
     bgImg = loadImage('assets/bg.png')
@@ -723,7 +724,7 @@ function setupMenu() {
 }
 
 function setupGame() {
-    createCanvas(384, 216, 'pixelated x4');
+    createCanvas(384, 216, 'pixelated');
     //createCanvas(1252, 748);
     world.gravity.y = 10;
     player = new Player(startPositions[0][0], startPositions[0][1], sheet)
@@ -889,8 +890,8 @@ function levelSetup() {
         "bbbbbbbbbbbbS......NbbbbbbbbbbbbbbbbbbbbbbbS......Abbbbbbbbbbbbb",
         "bbbbbbbbbbbbL.......AbbbbbbbbbbbbbbbbbbbbbbbR....Gbbbbbbbbbbbbbb",
         "bbbbbbbbbppL........NbbbbbbbbbbbbbbbbbppbbbbbK...BqNbbbbbbbbbbbb",
-        "bbbbbpppL.q..........NbbbbbbbbbbbbbppLq.NpbbL4....c.qNpbbbbbbbbb",
-        "bpppL..q..a..........qNpbbbbbbbbbpL...a...NL......c.c..Npbbbbbbb",
+        "bbbbbpppL.q..........NbbbbbbbbbbbbbppLq.NpbbL4....a.qNpbbbbbbbbb",
+        "bpppL..q..a..........qNpbbbbbbbbbpL...a...NL......a.a..Npbbbbbbb",
         "L......a.Ha..........a..NpbbbpppLq....a...q......OMMMK...Abbbbbb",
         ".......a.ha..........a..q.NbL..q.a....a...a.......q.......Nbbbbb",
         "......OMMMMK.........a..a..Q...a.a...OMMMMMK......a........Nbbbb",
@@ -1482,20 +1483,27 @@ function continueGame() {
     }
 
 function useSlowFall() {
+    //Check if player is touching tiles
     if((!bottomSensor.colliding(walkable) || !bottomSensor.colliding(corner))) {
-        if(slowFall) {
-            console.log("primed")
-            if(kb.pressing('r')) {
+        //Check if r key is pressed
+            if(kb.pressing('r') && slowFall) {
+                //Reduce world gravity
                 world.gravity.y = 5;
-                console.log("active")
+                //Decrement timer every frame
+                fallTimer -= 1
+                //After 2 seconds, stop slowfall
+                if(fallTimer <= 0) {
+                    slowFall = false
+                }
             }
             else{
+                //Reset world gravity
                 world.gravity.y = 10;
             }
         }
-    }
-    else {
+    //Reset timer when landing
+    if((bottomSensor.colliding(walkable) || bottomSensor.colliding(corner))){
         slowFall = true
+        fallTimer = 120
     }
-    console.log("function called")
 }

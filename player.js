@@ -106,10 +106,12 @@ class Player {
         }
     }
 
-    // Hit for if damage is affected by shield
+    // Hit for if damage is affected by shield or invincibility
     hit(shield, checkX, checkY) {
         if(!shield && !this.inv){
+            //Call to check if lives are empty
             this.die();
+            //Check for checkpoint coordinates
             if(this.checkpoint == 0) {
                 this.player.x = this.xPos;
                 this.player.y = this.yPos;
