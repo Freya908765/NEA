@@ -98,8 +98,10 @@ class Player {
                 this.dash = false;
             }     
         }
+        //Decrement invincibility timer
         this.timer -= 1
         if(this.timer == 20) {
+            //Check if invincibility has run out
             this.inv = false
         }
     }
