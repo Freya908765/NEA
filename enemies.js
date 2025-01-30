@@ -55,3 +55,23 @@ class Enemy2 extends Enemies {
         })
     }
 }
+
+class Enemy3 extends Enemies {
+    constructor(spritesheet) {
+        super(spritesheet)
+            this.spritesheet = spritesheet;
+            this.speed = 1;
+
+            this.enemy3 = new Group();
+            this.enemy3.collider = 'k';
+            this.enemy3.tile = '^';
+            this.enemy3.w = 17;
+            this.enemy3.h = 14;
+
+            this.enemy3.spriteSheet = spritesheet;
+            this.enemy3.anis.frameDelay = 8;
+            this.enemy3.addAnis({
+                fly: { row:0, frames: 3}
+            })
+    }
+}

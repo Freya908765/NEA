@@ -33,6 +33,7 @@ function preload() {
     shieldSheet = loadImage('assets/shield.png')
     enemy1Sheet = loadImage('assets/enemy1Sheet.png')
     enemy2Sheet = loadImage('assets/enemy2Sheet.png')
+    enemy3Sheet = loadImage('assets/enemy3Sheet.png')
     checkpointSheet = loadImage('assets/checkpointSheet.png')
     coinSheet = loadImage('assets/coinSheet.png')
 
@@ -836,7 +837,7 @@ function levelSetup() {
         "bbbbbS......ullo...yIGggRIy..........uo..Eh.....................",
         "ppbbbL.....ulllF..IGgZbbGggR........ullUGgggRI......GR..........",
         "..NpL......qllla.GggRbbbAbbL........flGgZbbbXgR....eZXr.........",
-        ".......*....qia..NppLbbbNpL........IGgZbbbbbGgggR...NL....IT....",
+        ".....^.*....qia..NppLbbbNpL........IGgZbbbbbGgggR...NL....IT....",
         ".............t....NpppbbL..........GZbbbGggggRbbS........esL....",
         "!.....uo.....P........NL.......*.GggRbbbAbbbbSppL..TI...........",
         "gggREulF.....GR...............uo.NbbSbbbAbbbbSbS..GZgR..........",
@@ -1027,7 +1028,6 @@ function drawGame() {
     collectPumpkin();
     collectCoin();
     useSlowFall();
-    //useHook();
 
     touchWater();
     touchSpikes();
@@ -1469,18 +1469,6 @@ function continueGame() {
     ContinueButton.remove()
     BackButton.remove()
 }
-
-//function useHook() {
-    if(mouse.presses()) {
-        dest = new Sprite(mouseX, mouseY, 10, 10)
-        console.log(dest.x + " " + dest.y + " " + player.player.x + " " + player.player.y)
-
-        grappleDist = calcDist(player.player.x, mX, player.player.y, mY)
-        if(grappleDist < 20) {
-
-        }
-        console.log(grappleDist)
-    }
 
 function useSlowFall() {
     //Check if player is touching tiles
