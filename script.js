@@ -33,7 +33,7 @@ function preload() {
     shieldSheet = loadImage('assets/shield.png')
     enemy1Sheet = loadImage('assets/enemy1Sheet.png')
     enemy2Sheet = loadImage('assets/enemy2Sheet.png')
-    enemy3Sheet = loadImage('assets/enemy3Sheet.png')
+    enemy3Sheet = loadImage('assets/enemy3.png')
     checkpointSheet = loadImage('assets/checkpointSheet.png')
     coinSheet = loadImage('assets/coinSheet.png')
 
@@ -704,6 +704,7 @@ function setupMenu() {
 
     enemies1 = new Enemy1(enemy1Sheet)
     enemies2 = new Enemy2(enemy2Sheet)
+    enemies3 = new Enemy3(enemy3Sheet)
 
     //Navigation bar buttons
     LoadButton = createButton('Load Game');
@@ -718,6 +719,7 @@ function setupMenu() {
     HighscoreButton = createButton('Highscores');
     HighscoreButton.class("button");
     HighscoreButton.position(width * 2.13, height * 2.5);
+    HighscoreButton.mousePressed(highscores);
     
     SettingsButton = createButton('Settings');
     SettingsButton.class("button");
@@ -837,7 +839,7 @@ function levelSetup() {
         "bbbbbS......ullo...yIGggRIy..........uo..Eh.....................",
         "ppbbbL.....ulllF..IGgZbbGggR........ullUGgggRI......GR..........",
         "..NpL......qllla.GggRbbbAbbL........flGgZbbbXgR....eZXr.........",
-        ".....^.*....qia..NppLbbbNpL........IGgZbbbbbGgggR...NL....IT....",
+        ".......*....qia..NppLbbbNpL........IGgZbbbbbGgggR...NL....IT....",
         ".............t....NpppbbL..........GZbbbGggggRbbS........esL....",
         "!.....uo.....P........NL.......*.GggRbbbAbbbbSppL..TI...........",
         "gggREulF.....GR...............uo.NbbSbbbAbbbbSbS..GZgR..........",
@@ -890,7 +892,7 @@ function levelSetup() {
         [
         "bbbbbbbbbbbbS......NbbbbbbbbbbbbbbbbbbbbbbbS......Abbbbbbbbbbbbb",
         "bbbbbbbbbbbbL.......AbbbbbbbbbbbbbbbbbbbbbbbR....Gbbbbbbbbbbbbbb",
-        "bbbbbbbbbppL........NbbbbbbbbbbbbbbbbbppbbbbbK...BqNbbbbbbbbbbbb",
+        "bbbbbbbbbppL....^...NbbbbbbbbbbbbbbbbbppbbbbbK...BqNbbbbbbbbbbbb",
         "bbbbbpppL.q..........NbbbbbbbbbbbbbppLq.NpbbL4....a.qNpbbbbbbbbb",
         "bpppL..q..a..........qNpbbbbbbbbbpL...a...NL......a.a..Npbbbbbbb",
         "L......a.Ha..........a..NpbbbpppLq....a...q......OMMMK...Abbbbbb",
@@ -911,12 +913,12 @@ function levelSetup() {
         ".t..................t..........t.........................U..Uull",
         ".t..................t..........t.........................U..UU£.",
         ".t..................t..........t........................Gggggggg",
-        "ggR.................t..........t........................Abbbbbbb",
+        "ggR...^.............t..........t........................Abbbbbbb",
         "bbS.................t..........t.......................OAbbbbbbb",
         "bbS£..............E.t........H.t.......................3AbbGggRb",
         "GggggR..........GggggggR.....h.t.....................ullAbbAbbSb",
         "bbbbbS..........AbbbbbbS...GggggR....................U..AbbAbbSb",
-        "bbbbGggR.......uAbbbbbbS£uoAbbbbS...................GgggbbbAbbSb",
+        "bbbbGggR.......uAbbbbbbS£uoAbbbbS...............^...GgggbbbAbbSb",
         "bbbbAbbS.......UAbbbbGggggggRbbbS...................AbbbbbbAbbSb",
         "bbbbAbbS...GgR.UAbbbbAbbbbbbSbbbS...................AbbbbbbAbbSb",
         "bbbbAbbS...AbS.dAbbbbAbbbbbbSbbbSlo...............££AbbbbbbAbbSb",
@@ -1028,6 +1030,8 @@ function drawGame() {
     collectPumpkin();
     collectCoin();
     useSlowFall();
+    trackPlayer()
+    resetSensors()
 
     touchWater();
     touchSpikes();
@@ -1464,6 +1468,10 @@ function mainMenu() {
     window.open("index.html", "_self")
 }
 
+function highscores() {
+    window.open("highscores.html", "_self")
+}
+
 function continueGame() {
     state = 1
     ContinueButton.remove()
@@ -1493,5 +1501,35 @@ function useSlowFall() {
     if((bottomSensor.colliding(walkable) || bottomSensor.colliding(corner))){
         slowFall = true
         fallTimer = 120
+    }
+}
+
+function trackPlayer() {
+    for(e of enemies3.enemy3) {
+        enemy3Hyp = calcDist(player.player.x, e.x, player.player.y, e.y)
+        e.opp = e.y - player.player.y
+        // Checks if the distance between player and enemy is less than 150
+        if((enemy3Hyp <= 150)) {
+
+            // Determines the angle between the player and the enemy
+            if(player.player.x > e.x) {
+                e.mirror.x = true
+                e.adj = player.player.x - e.x
+                e.angle = -Math.atan(e.opp/e.adj) * (180/PI);
+            }
+            else if(player.player.x < e.x){
+                e.mirror.x = false
+                e.adj = e.x - player.player.x 
+                e.angle = Math.atan(e.opp/e.adj) * (180/PI) +180
+            }
+            //Moves the enemy towards the player using the angle
+            e.move(100, e.angle, enemies3.speed)
+        }
+
+        //Check if enemy hits player
+        if(e.collides(player.player)) {
+            player.hit(shieldActive, checkx, checky)
+            e.remove()
+        }
     }
 }
